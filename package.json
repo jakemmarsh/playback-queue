@@ -1,17 +1,12 @@
 {
   "name": "node-song-queue",
   "version": "0.0.1",
-  "description": "A node module for creating and operating on a song queue. Includes history, shuffling, and repeating.",
+  "description": "A node module for creating and operating on a song queue. Includes history, shuffling, and repetition.",
   "main": "dist/index.js",
   "scripts": {
-    "test": "jest",
-    "build": "babel lib/index.js -o dist/index.js",
+    "dev": "babel lib/index.js --watch --out-file dist/index.js --source-maps inline --presets es2015",
+    "build": "babel lib/index.js --out-file dist/index.js --presets es2015",
     "prepublish": "npm run-script build"
-  },
-  "jest": {
-    "scriptPreprocessor": "<rootDir>/node_modules/babel-jest",
-    "testFileExtensions": ["js"],
-    "moduleFileExtensions": ["js"]
   },
   "repository": {
     "type": "git",
@@ -28,7 +23,8 @@
   },
   "homepage": "https://github.com/jakemmarsh/node-song-queue",
   "devDependencies": {
-    "babel-jest": "^5.3.0",
-    "jest-cli": "^0.5.0"
+    "babel-cli": "^6.4.5",
+    "babel-core": "^6.4.5",
+    "babel-preset-es2015": "^6.3.13"
   }
 }
