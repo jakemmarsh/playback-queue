@@ -3,12 +3,12 @@
 import should from 'should';
 import sinon from 'sinon';
 
-import SongQueue from '../lib/index';
+import PlaybackQueue from '../lib/index';
 
-describe('SongQueue', function() {
+describe('PlaybackQueue', function() {
 
   beforeEach(function() {
-    this.queue = new SongQueue();
+    this.queue = new PlaybackQueue();
   });
 
   it('should something', function() {

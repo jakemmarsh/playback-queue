@@ -1,7 +1,7 @@
 {
-  "name": "node-song-queue",
+  "name": "playback-queue",
   "version": "0.0.1",
-  "description": "A node module for creating and operating on a song queue. Includes history, shuffling, and repetition.",
+  "description": "A node module for creating and operating on a playback queue. Includes history, shuffling, and repetition.",
   "main": "dist/index.js",
   "scripts": {
     "dev": "babel lib/index.js --watch --out-file dist/index.js --source-maps inline",
@@ -12,18 +12,23 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/jakemmarsh/node-song-queue.git"
+    "url": "https://github.com/jakemmarsh/playback-queue.git"
   },
   "keywords": [
     "song",
+    "music",
+    "playback",
+    "history",
+    "shuffle",
+    "repeat",
     "queue"
   ],
   "author": "Jake Marsh <jakemmarsh@gmail.com> (http://jakemmarsh.com)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/jakemmarsh/node-song-queue/issues"
+    "url": "https://github.com/jakemmarsh/playback-queue/issues"
   },
-  "homepage": "https://github.com/jakemmarsh/node-song-queue",
+  "homepage": "https://github.com/jakemmarsh/playback-queue",
   "devDependencies": {
     "babel-cli": "^6.4.5",
     "babel-core": "^6.4.5",
