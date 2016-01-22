@@ -4,8 +4,8 @@
   "description": "A node module for creating and operating on a song queue. Includes history, shuffling, and repetition.",
   "main": "dist/index.js",
   "scripts": {
-    "dev": "babel lib/index.js --watch --out-file dist/index.js --source-maps inline --presets es2015",
-    "build": "babel lib/index.js --out-file dist/index.js --presets es2015",
+    "dev": "babel lib/index.js --watch --out-file dist/index.js --source-maps inline",
+    "build": "babel lib/index.js --out-file dist/index.js",
     "prepublish": "npm run-script build"
   },
   "repository": {
