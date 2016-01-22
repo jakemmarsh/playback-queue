@@ -1,6 +1,9 @@
 'use strict';
 
-const SongQueue = require('../lib');
+import should from 'should';
+import sinon from 'sinon';
+
+import SongQueue from '../lib/index';
 
 describe('SongQueue', function() {
 
