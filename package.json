@@ -1,6 +1,6 @@
 {
   "name": "playback-queue",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "A node module for creating and operating on a playback queue. Includes history, shuffling, and repetition.",
   "main": "dist/index.js",
   "scripts": {
