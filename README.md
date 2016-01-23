@@ -1,4 +1,4 @@
-# playback-queue
+# playback-queue [![npm version](https://badge.fury.io/js/playback-queue.svg)](https://badge.fury.io/js/playback-queue)
 A node module for creating and operating on a music playback queue. Includes history, shuffling, and repeating.
 
 ## Usage
