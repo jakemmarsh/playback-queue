@@ -24,37 +24,54 @@ var REPEAT_STATES = {
   none: 2
 };
 
-var SongQueue = function () {
-  function SongQueue() {
+var PlaybackQueue = function () {
+  function PlaybackQueue() {
     var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 
-    _classCallCheck(this, SongQueue);
+    _classCallCheck(this, PlaybackQueue);
 
     this.queuePool = options.tracks || [];
     this.currentTrack = null;
-    this.currentIndex = null;
+    this.currentIndex = -1;
 
     this.isShuffled = options.shuffle && options.shuffle.toString() === 'true' ? true : false;
-    this.repeatState = _lodash2.default.has(REPEAT_STATES, options.repeat) ? REPEAT_STATES[options.repeat] : REPEAT_STATES.none;
+    this.repeatState = _lodash2.default.has(REPEAT_STATES, options.repeat) ? REPEAT_STATES[options.repeat] : REPEAT_STATES.playlist;
 
     this.shufflePool = [];
     this.shuffleIndex = 0;
 
     this.playHistory = [];
-    this.playHistoryIndex = 0;
+    this.historyIndex = 0;
   }
 
-  _createClass(SongQueue, [{
+  _createClass(PlaybackQueue, [{
+    key: 'setTracks',
+    value: function setTracks() {
+      var tracks = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+
+      this.queuePool = tracks;
+      this.currentTrack = null;
+      this.currentIndex = -1;
+
+      this.shufflePool = [];
+      this.shuffleIndex = 0;
+
+      this.playHistory = [];
+      this.historyIndex = 0;
+
+      this.nextTrack();
+    }
+  }, {
     key: 'nextTrack',
     value: function nextTrack() {
-      if (this.repeatState == REPEAT_STATES.track) {
+      if (this.repeatState == REPEAT_STATES.track && this.currentTrack) {
         return this.currentTrack;
       }
 
-      if (this.playHistoryIndex > 0 && this.playHistory.length >= this.playHistoryIndex) {
-        this.playHistoryIndex--;
+      if (this.historyIndex > 0 && this.playHistory.length >= this.historyIndex) {
+        this.historyIndex--;
 
-        return this.selectTrack(this.playHistory[this.playHistoryIndex]);
+        return this.selectTrack(this.playHistory[this.historyIndex]);
       } else {
         if (this.isShuffled) {
           if (this.shuffleIndex === this.shufflePool.length) {
@@ -80,10 +97,10 @@ var SongQueue = function () {
   }, {
     key: 'previousTrack',
     value: function previousTrack() {
-      if (this.playHistory.length > 0 && this.playHistoryIndex + 1 < this.playHistory.length) {
-        this.playHistoryIndex++;
+      if (this.playHistory.length > 0 && this.historyIndex + 1 < this.playHistory.length) {
+        this.historyIndex++;
 
-        return this.selectTrack(this.playHistory[this.playHistoryIndex]);
+        return this.selectTrack(this.playHistory[this.historyIndex]);
       } else {
         var index = this.currentIndex - 1;
 
@@ -98,6 +115,11 @@ var SongQueue = function () {
     key: 'selectTrack',
     value: function selectTrack(track) {
       var indexInQueue = this.findTrackIndex(track);
+
+      if (indexInQueue === -1) {
+        throw new Error('That track is not in the currently selected playlist.');
+        return;
+      }
 
       this.currentIndex = indexInQueue;
       this.currentTrack = track;
@@ -123,16 +145,28 @@ var SongQueue = function () {
     }
   }, {
     key: 'sortTracks',
-    value: function sortTracks(attr) {}
+    value: function sortTracks(attr) {
+      var asc = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
+
+      this.queuePool = _lodash2.default.sortBy(this.queuePool, function (track) {
+        return track[attr];
+      });
+
+      if (asc === false) {
+        this.queuePool = _lodash2.default.reverse(this.queuePool);
+      }
+
+      this.currentIndex = this.findTrackIndex(this.currentTrack);
+    }
   }, {
     key: 'generateShufflePool',
     value: function generateShufflePool() {
       this.shufflePool = this.queuePool.slice(0);
 
       if (this.queuePool.length > 1) {
-        var currentSong = this.shufflePool.splice(this.currentIndex, 1);
+        var currentSong = this.shufflePool.splice(this.currentIndex, 1)[0];
 
-        this.shufflePool = _utils2.default.shuffleArray(this.shufflePool);;
+        this.shufflePool = _utils2.default.shuffleArray(this.shufflePool);
 
         this.shufflePool.unshift(currentSong);
 
@@ -143,7 +177,7 @@ var SongQueue = function () {
     }
   }]);
 
-  return SongQueue;
+  return PlaybackQueue;
 }();
 
-exports.default = SongQueue;
+exports.default = PlaybackQueue;
