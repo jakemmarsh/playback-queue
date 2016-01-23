@@ -18,7 +18,7 @@ describe('PlaybackQueue', function() {
       queue.currentIndex.should.equal(-1);
 
       should(queue.isShuffled).be.false();
-      should(queue.repeatState).equal(0);
+      should(queue.repeatState).equal('playlist');
 
       queue.shufflePool.should.eql([]);
       queue.shuffleIndex.should.equal(0);
@@ -34,12 +34,12 @@ describe('PlaybackQueue', function() {
       const queue = new PlaybackQueue({
         tracks: tracks,
         shuffle: shuffle,
-        repeat: repeat
+        repeat: 'track'
       });
 
       queue.queuePool.should.equal(tracks);
       queue.isShuffled.should.equal(shuffle);
-      queue.repeatState.should.equal(1);
+      queue.repeatState.should.equal('track');
 
       should(queue.currentTrack).be.null();
       queue.currentIndex.should.equal(-1);
@@ -125,7 +125,7 @@ describe('PlaybackQueue', function() {
       });
 
       it('should generate the shuffle pool if not done already', function() {
-        const generateStub = sandbox.stub(queue, 'generateShufflePool');
+        const generateStub = sandbox.stub(queue, '_generateShufflePool');
 
         sandbox.stub(queue, 'selectTrack');
         queue.nextTrack();
@@ -245,7 +245,7 @@ describe('PlaybackQueue', function() {
 
         queue.toggleRepeat();
 
-        queue.repeatState.should.equal(0);
+        queue.repeatState.should.equal('playlist');
       });
     });
 
@@ -255,7 +255,7 @@ describe('PlaybackQueue', function() {
 
         queue.toggleRepeat();
 
-        queue.repeatState.should.equal(2);
+        queue.repeatState.should.equal('none');
       });
     });
 
@@ -265,27 +265,7 @@ describe('PlaybackQueue', function() {
 
         queue.toggleRepeat();
 
-        queue.repeatState.should.equal(1);
-      });
-    });
-  });
-
-  describe('#findTrackIndex', function() {
-    describe('when track is in queuePool', function() {
-      it('should return the index', function() {
-        const tracks = [{ id: 1 }, { id: 2 }];
-        const queue = new PlaybackQueue({ tracks: tracks });
-
-        queue.findTrackIndex(tracks[0]).should.equal(0);
-        queue.findTrackIndex(tracks[1]).should.equal(1);
-      });
-    });
-
-    describe('when track is not in queuePool', function() {
-      it('should return -1', function() {
-        const queue = new PlaybackQueue();
-
-        queue.findTrackIndex({ id: 1 }).should.equal(-1);
+        queue.repeatState.should.equal('track');
       });
     });
   });
@@ -318,7 +298,27 @@ describe('PlaybackQueue', function() {
     });
   });
 
-  describe('#generateShufflePool', function() {
+  describe('#_findTrackIndex', function() {
+    describe('when track is in queuePool', function() {
+      it('should return the index', function() {
+        const tracks = [{ id: 1 }, { id: 2 }];
+        const queue = new PlaybackQueue({ tracks: tracks });
+
+        queue._findTrackIndex(tracks[0]).should.equal(0);
+        queue._findTrackIndex(tracks[1]).should.equal(1);
+      });
+    });
+
+    describe('when track is not in queuePool', function() {
+      it('should return -1', function() {
+        const queue = new PlaybackQueue();
+
+        queue._findTrackIndex({ id: 1 }).should.equal(-1);
+      });
+    });
+  });
+
+  describe('#_generateShufflePool', function() {
     describe('if queuePool has tracks', function() {
       it('should build this.shufflePool by removing the current song, shuffling, and adding it back', function() {
         const tracks = [{ id: 1 }, { id: 2 }, { id: 3 }];
@@ -327,7 +327,7 @@ describe('PlaybackQueue', function() {
         const currentIndex = 0;
 
         queue.currentIndex = currentIndex;
-        queue.generateShufflePool();
+        queue._generateShufflePool();
 
         sinon.assert.calledWith(shuffleSpy, tracks.slice(1));
         queue.shufflePool[0].should.eql(tracks[currentIndex]);
@@ -340,7 +340,7 @@ describe('PlaybackQueue', function() {
 
         queue.shufflePool = [{ id: 1 }];
         queue.shuffleIndex = 7;
-        queue.generateShufflePool();
+        queue._generateShufflePool();
 
         queue.shufflePool.should.eql(queue.queuePool);
         queue.shuffleIndex.should.equal(0);
