@@ -71,7 +71,7 @@ var PlaybackQueue = function () {
       } else {
         if (this.isShuffled) {
           if (this.shuffleIndex === this.shufflePool.length) {
-            this.generateShufflePool();
+            this._generateShufflePool();
           }
 
           this.playHistory.unshift(this.shufflePool[this.shuffleIndex]);
@@ -110,7 +110,7 @@ var PlaybackQueue = function () {
   }, {
     key: 'selectTrack',
     value: function selectTrack(track) {
-      var indexInQueue = this.findTrackIndex(track);
+      var indexInQueue = this._findTrackIndex(track);
 
       if (indexInQueue === -1) {
         throw new Error('That track is not in the currently selected playlist.');
@@ -133,13 +133,6 @@ var PlaybackQueue = function () {
       this.repeatState = REPEAT_STATES[(REPEAT_STATES.indexOf(this.repeatState) + 1) % 3];
     }
   }, {
-    key: 'findTrackIndex',
-    value: function findTrackIndex(track) {
-      return _lodash2.default.findIndex(this.queuePool, function (queueTrack) {
-        return _lodash2.default.isEqual(track, queueTrack);
-      });
-    }
-  }, {
     key: 'sortTracks',
     value: function sortTracks(attr) {
       var asc = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
@@ -152,11 +145,18 @@ var PlaybackQueue = function () {
         this.queuePool = _lodash2.default.reverse(this.queuePool);
       }
 
-      this.currentIndex = this.findTrackIndex(this.currentTrack);
+      this.currentIndex = this._findTrackIndex(this.currentTrack);
     }
   }, {
-    key: 'generateShufflePool',
-    value: function generateShufflePool() {
+    key: '_findTrackIndex',
+    value: function _findTrackIndex(track) {
+      return _lodash2.default.findIndex(this.queuePool, function (queueTrack) {
+        return _lodash2.default.isEqual(track, queueTrack);
+      });
+    }
+  }, {
+    key: '_generateShufflePool',
+    value: function _generateShufflePool() {
       this.shufflePool = this.queuePool.slice(0);
 
       if (this.queuePool.length > 1) {
