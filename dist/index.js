@@ -18,11 +18,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var REPEAT_STATES = {
-  playlist: 0,
-  track: 1,
-  none: 2
-};
+var REPEAT_STATES = ['playlist', 'track', 'none'];
 
 var PlaybackQueue = function () {
   function PlaybackQueue() {
@@ -35,7 +31,7 @@ var PlaybackQueue = function () {
     this.currentIndex = -1;
 
     this.isShuffled = options.shuffle && options.shuffle.toString() === 'true' ? true : false;
-    this.repeatState = _lodash2.default.has(REPEAT_STATES, options.repeat) ? REPEAT_STATES[options.repeat] : REPEAT_STATES.playlist;
+    this.repeatState = _lodash2.default.indexOf(REPEAT_STATES, options.repeat) !== -1 ? options.repeat : 'playlist';
 
     this.shufflePool = [];
     this.shuffleIndex = 0;
@@ -64,7 +60,7 @@ var PlaybackQueue = function () {
   }, {
     key: 'nextTrack',
     value: function nextTrack() {
-      if (this.repeatState == REPEAT_STATES.track && this.currentTrack) {
+      if (this.repeatState == 'track' && this.currentTrack) {
         return this.currentTrack;
       }
 
@@ -134,7 +130,7 @@ var PlaybackQueue = function () {
   }, {
     key: 'toggleRepeat',
     value: function toggleRepeat() {
-      this.repeatState = (this.repeatState + 1) % 3;
+      this.repeatState = REPEAT_STATES[(REPEAT_STATES.indexOf(this.repeatState) + 1) % 3];
     }
   }, {
     key: 'findTrackIndex',
