@@ -5,7 +5,7 @@ A fully-featured and generic playback queue for music objects including history,
 `npm install --save playback-queue`
 
 ```js
-  import PlaybackQueue from 'playback-queue'
+  import PlaybackQueue from 'playback-queue';
 
   const options = {};
   const queue = new PlaybackQueue(options);
